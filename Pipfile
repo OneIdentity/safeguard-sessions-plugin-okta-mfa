@@ -1,0 +1,9 @@
+[packages]
+# Implicit with Plugin SDK: requests = "*"
+
+[dev-packages]
+# Implicit with Plugin SDK: requests = "*"
+pyotp = "*"
+
+[requires]
+python_version = "3.6"
