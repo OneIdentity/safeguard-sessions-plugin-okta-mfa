@@ -69,7 +69,7 @@ class Client(MFAClient):
                    httptimeout=plugin_configuration.getint(section, 'http_socket_timeout', 15),
                    pollinterval=plugin_configuration.getint(section, 'rest_poll_interval', 1),
                    defaultOTPtype=plugin_configuration.get(section, 'default_prefix', 'o'),
-                   ignore_connection_error = plugin_configuration.getboolean(section, 'ignore_connection_error'))
+                   ignore_connection_error=plugin_configuration.getboolean(section, 'ignore_connection_error'))
 
     def otp_authenticate(self, user, passcode):
         return self.do_authentication(user, passcode)
@@ -121,8 +121,8 @@ class Client(MFAClient):
                 raise
 
         self.logger.debug("User '%s' found: login='%s'; email='%s'", username,
-                       self.user['profile']['login'],
-                       self.user['profile']['email'])
+                          self.user['profile']['login'],
+                          self.user['profile']['email'])
 
     def _find_provider(self, passcode):
         (provider, passcode) = self._extract_provider_from_passcode(passcode)
@@ -130,8 +130,8 @@ class Client(MFAClient):
         self.passcode = passcode
 
         self.logger.info("Selected provider: [%s/%s/%s]", provider,
-                      self.provider['provider'],
-                      self.provider['type'])
+                         self.provider['provider'],
+                         self.provider['type'])
 
     def _extract_provider_from_passcode(self, passcode):
         # If no passcode, then try OKTA PUSH
@@ -158,9 +158,9 @@ class Client(MFAClient):
                 if 'id' not in factor:
                     break
                 self.logger.debug("Checking factor (%s; %s; %s)",
-                               factor.get('provider'),
-                               factor.get('factorType'),
-                               factor.get('status'))
+                                  factor.get('provider'),
+                                  factor.get('factorType'),
+                                  factor.get('status'))
                 if (factor.get('provider') == self.provider['provider'] and
                     factor.get('factorType') == self.provider['type'] and
                         factor.get('status') == 'ACTIVE'):
@@ -201,7 +201,7 @@ class Client(MFAClient):
             if exc.response.status_code < 500:
                 error = exc.response.json()
                 self.logger.error("OTP validation failure: {errorSummary} (code: {errorCode}, id: {errorId})"
-                               .format(**error))
+                                  .format(**error))
                 raise MFAAuthenticationFailure("OTP validation failure: {errorSummary}"
                                                " (code: {errorCode}, id: {errorId})".format(**error))
             else:

@@ -20,7 +20,6 @@
 # SOFTWARE.
 #
 from ..plugin import Plugin
-from textwrap import dedent
 import pytest
 
 
