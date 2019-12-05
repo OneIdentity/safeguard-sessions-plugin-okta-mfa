@@ -20,22 +20,22 @@ logger = logging.getLogger("spsokta_conftest")
 
 @pytest.fixture
 def okta_api_url(site_parameters):
-    return site_parameters['api_url']
+    return site_parameters["api_url"]
 
 
 @pytest.fixture
 def okta_api_key(site_parameters):
-    return site_parameters['api_key']
+    return site_parameters["api_key"]
 
 
 @pytest.fixture
 def okta_application_id(site_parameters):
-    return site_parameters['application_id']
+    return site_parameters["application_id"]
 
 
 @pytest.fixture
 def okta_user(site_parameters):
-    return site_parameters['username']
+    return site_parameters["username"]
 
 
 @pytest.fixture
@@ -49,7 +49,9 @@ defaultOTPtype=o
 
 [auth]
 prompt=Hit Enter to send Okta Verify push notification or provide the OTP:
-""".format(api_url=okta_api_url, api_key=okta_api_key, application_id=okta_application_id)
+""".format(
+        api_url=okta_api_url, api_key=okta_api_key, application_id=okta_application_id
+    )
 
 
 last_totp = None
@@ -69,14 +71,14 @@ def totp_response(request, site_parameters):
         logger.info("Wait until new OTP is generated")
 
         while True:
-            current_totp = pyotp.TOTP(site_parameters['totp_secret']).now()
+            current_totp = pyotp.TOTP(site_parameters["totp_secret"]).now()
             if current_totp != last_totp:
                 last_totp = current_totp
-                return 'g=' + current_totp
+                return "g=" + current_totp
             time.sleep(1)
 
-    backend_service = request.config.getoption('backend_service')
-    if backend_service == 'replay':
-        return lambda: 'g=' + pyotp.TOTP(site_parameters['totp_secret']).now()
+    backend_service = request.config.getoption("backend_service")
+    if backend_service == "replay":
+        return lambda: "g=" + pyotp.TOTP(site_parameters["totp_secret"]).now()
     else:
         return get_next_totp

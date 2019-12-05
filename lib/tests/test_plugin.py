@@ -31,12 +31,9 @@ def plugin(plugin_config):
 @pytest.mark.interactive
 def test_authenticate_using_push(plugin, okta_user, interactive):
     interactive.message("This is an end-to-end authentication request using Okta, please ACCEPT it")
-    result = (plugin.authenticate(cookie={},
-                                  session_cookie={},
-                                  gateway_user=okta_user,
-                                  client_ip="1.2.3.4",
-                                  key_value_pairs={},
-                                  protocol="ssh"))
+    result = plugin.authenticate(
+        cookie={}, session_cookie={}, gateway_user=okta_user, client_ip="1.2.3.4", key_value_pairs={}, protocol="ssh"
+    )
 
     assert verdict(result) == "NEEDINFO"
     assert len(question(result)) == 3
@@ -47,23 +44,22 @@ def test_authenticate_using_push(plugin, okta_user, interactive):
 
     sc = session_cookie(result)
 
-    result = (plugin.authenticate(cookie={},
-                                  session_cookie=sc,
-                                  gateway_user=okta_user,
-                                  client_ip="1.2.3.4",
-                                  key_value_pairs={'otp': ""},
-                                  protocol="ssh"))
+    result = plugin.authenticate(
+        cookie={},
+        session_cookie=sc,
+        gateway_user=okta_user,
+        client_ip="1.2.3.4",
+        key_value_pairs={"otp": ""},
+        protocol="ssh",
+    )
 
     assert verdict(result) == "ACCEPT"
 
 
 def test_authenticate_using_otp(plugin, okta_user, totp_response):
-    result = (plugin.authenticate(cookie={},
-                                  session_cookie={},
-                                  gateway_user=okta_user,
-                                  client_ip="1.2.3.4",
-                                  key_value_pairs={},
-                                  protocol="ssh"))
+    result = plugin.authenticate(
+        cookie={}, session_cookie={}, gateway_user=okta_user, client_ip="1.2.3.4", key_value_pairs={}, protocol="ssh"
+    )
 
     assert verdict(result) == "NEEDINFO"
     assert len(question(result)) == 3
@@ -72,46 +68,50 @@ def test_authenticate_using_otp(plugin, okta_user, totp_response):
     assert "Okta" in prompt
     assert disable_echo is False
 
-    result = (plugin.authenticate(cookie={},
-                                  session_cookie={},
-                                  gateway_user=okta_user,
-                                  client_ip="1.2.3.4",
-                                  key_value_pairs={'otp': totp_response()},
-                                  protocol="ssh"))
+    result = plugin.authenticate(
+        cookie={},
+        session_cookie={},
+        gateway_user=okta_user,
+        client_ip="1.2.3.4",
+        key_value_pairs={"otp": totp_response()},
+        protocol="ssh",
+    )
 
     assert verdict(result) == "ACCEPT"
 
 
 def test_authenticate_denies_request_if_provider_is_known_but_not_set_up(plugin, okta_user):
-    result = (plugin.authenticate(cookie={},
-                                  session_cookie={},
-                                  gateway_user=okta_user,
-                                  client_ip="1.2.3.4",
-                                  key_value_pairs={'otp': "r=rsaresponse"},
-                                  protocol="ssh"))
+    result = plugin.authenticate(
+        cookie={},
+        session_cookie={},
+        gateway_user=okta_user,
+        client_ip="1.2.3.4",
+        key_value_pairs={"otp": "r=rsaresponse"},
+        protocol="ssh",
+    )
 
     assert verdict(result) == "DENY"
     assert "Selected factor 'RSA' not found for user" in additional_metadata(result)
 
 
 def verdict(v):
-    return v['verdict']
+    return v["verdict"]
 
 
 def question(v):
-    return v['question']
+    return v["question"]
 
 
 def additional_metadata(v):
-    return v['additional_metadata']
+    return v["additional_metadata"]
 
 
 def session_cookie(v):
-    return v['session_cookie']
+    return v["session_cookie"]
 
 
 def session_cookie_questions(v, key=None):
     if key is None:
-        return v['session_cookie']["questions"]
+        return v["session_cookie"]["questions"]
     else:
-        return v['session_cookie']["questions"][key]
+        return v["session_cookie"]["questions"][key]

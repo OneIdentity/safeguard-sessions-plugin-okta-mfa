@@ -33,9 +33,7 @@ def inject_connection_error(mocker):
 
 @pytest.fixture
 def okta_client(okta_api_url, okta_api_key, okta_application_id):
-    return Client(api_url=okta_api_url,
-                  application_id=okta_application_id,
-                  api_key=okta_api_key)
+    return Client(api_url=okta_api_url, application_id=okta_application_id, api_key=okta_api_key)
 
 
 @pytest.mark.interactive
