@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: Safeguard Privilaged Sessions Integration Pool
+  name: Safeguard Privilaged Sessions Integration Pool
 
 steps:
   - script: |
